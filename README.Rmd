@@ -35,6 +35,29 @@ devtools::install_github('databrew/whobcnapp')
 
 ### Data transformation utilities
 
+#### Overview
+
+The functions for "cleaning" data are customized for the formats currently used by the office. In general terms, the work flow is as follows:
+
+- Define an "input" document (a country-specific MS Excel file)
+- Run a series of operations on that document, thereby generating...
+- An "output" of a series of machine-readable, structured tables ready for (a) upload to a SQL database, (b) manipulation or analysis as flat files using a statistical software, or (c) consumption by a web app.
+
+For further details on the rationale and formats of these transformations, see the "UHC Policy Watch Platform Design: DATA ASSESSMENT REPORT".
+
+#### Walk-through
+
+One starts by preparing the workspace with the necessary packages:
+
+```{r}
+library(tidyr)
+library(dplyr)
+library(lubridate)
+library(readxl)
+library(whobcnapp)
+```
+
+Next, one must define the input file to be transormed. For the purpose of this example, we'll use `BUL_Appendix_tables.xlsx` which is available at
 
 ### Web application
 
