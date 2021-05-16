@@ -23,5 +23,19 @@ You can install the most recent version of `whobcnapp` from
 
 ``` r
 # install.packages("devtools")
-devtools::install_github('databrew/whobcn', subdir = 'whobcnapp')
+devtools::install_github('databrew/whobcnapp')
+```
+
+## Usage
+
+### Data transformation utilities
+
+### Web application
+
+To run the web application, reproduce the following code in an R
+session:
+
+``` r
+library(whobcnapp)
+whobcnapp::run_app()
 ```
