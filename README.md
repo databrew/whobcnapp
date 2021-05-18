@@ -115,6 +115,9 @@ cat(paste0(names(data), collapse = '\n'))
 #> fig3a
 #> fig4
 #> fig5
+#> t2a
+#> t2b
+#> t2c
 ```
 
 Data is structured uniformly into a “long” format, following the
@@ -181,6 +184,27 @@ for(i in 1:length(data)){
 #> 1 Medicines  2005  0.868   Poorest  BUL   Breakdown of catastrophic spending by…
 #> 2 MedicalPr… 2005  0.00786 Poorest  BUL   Breakdown of catastrophic spending by…
 #> 3 Outpatien… 2005  0.0265  Poorest  BUL   Breakdown of catastrophic spending by…
+#> [1] "t2a"
+#> # A tibble: 3 x 4
+#>   quintile year  value indicator                                    
+#>   <chr>    <chr> <dbl> <chr>                                        
+#> 1 Poorest  2005   43.3 Mean annual per capita OOP by income quintile
+#> 2 2nd      2005   86.0 Mean annual per capita OOP by income quintile
+#> 3 3rd      2005   99.6 Mean annual per capita OOP by income quintile
+#> [1] "t2b"
+#> # A tibble: 3 x 4
+#>   grp              year  value indicator                              
+#>   <chr>            <chr> <dbl> <chr>                                  
+#> 1 Medicines        2005  79.7  Mean annual per capita OOP by structure
+#> 2 Medical products 2005   4.03 Mean annual per capita OOP by structure
+#> 3 Outpatient care  2005   4.18 Mean annual per capita OOP by structure
+#> [1] "t2c"
+#> # A tibble: 3 x 5
+#>   grp             year  value indicator                           quintile      
+#>   <chr>           <chr> <dbl> <chr>                               <fct>         
+#> 1 Medicines       2005  78.6  Mean annual per capita OOP by stru… Total populat…
+#> 2 Medical produc… 2005   3.98 Mean annual per capita OOP by stru… Total populat…
+#> 3 Outpatient care 2005   4.12 Mean annual per capita OOP by stru… Total populat…
 ```
 
 ### Data visualization utilities
@@ -246,6 +270,14 @@ plot_fig5(data = data)
 ```
 
 <img src="man/figures/README-unnamed-chunk-14-1.png" width="100%" />
+
+##### T2 data
+
+``` r
+plot_t2(data = data)
+```
+
+<img src="man/figures/README-unnamed-chunk-15-1.png" width="100%" />
 
 ### Web application
 

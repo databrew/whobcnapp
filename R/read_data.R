@@ -3,7 +3,6 @@
 #' Read a standard format MS Excel workbook into a list
 #' @param input_file A path to an excel file 
 #' @return a list
-#' @noRd
 #' @import readxl
 #' @import dplyr
 #' @export
@@ -149,6 +148,134 @@ read_data <- function(input_file){
   fig5$iso <- iso
   fig5$indicator <- 'Breakdown of catastrophic spending by type of health care by quintile, all years'
   out$fig5 <- fig5
+  
+  # Read T2 ################################
+  
+  # Mean annual per capita OOP by income quintile
+  suppressMessages({
+    t2a <- readxl::read_excel(input_file, sheet = 4, skip = 2, n_max = 7)
+    # Fix column names
+    names(t2a) <- c('quintile', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    t2a <- t2a %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    t2a$indicator <- 'Mean annual per capita OOP by income quintile'
+  })
+  out$t2a <- t2a
+  
+  # Mean annual per capita OOP by structure
+  suppressMessages({
+    t2b <- readxl::read_excel(input_file, sheet = 4, skip = 10, n_max = 7)
+    # Fix column names
+    names(t2b) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    t2b <- t2b %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    t2b$indicator <- 'Mean annual per capita OOP by structure'
+  })
+  out$t2b <- t2b
+  
+  # Additional (quintile data, lines 19 onwards)
+  quintile_data <- list()
+  # Share of total OOP spending by structure
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 18, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- 'Total population'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 26, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- 'Poorest'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 34, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- '2nd'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 42, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- '3rd'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 50, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- '4th'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  
+  suppressMessages({
+    tx <- readxl::read_excel(input_file, sheet = 4, skip = 58, n_max = 7)
+    # Fix column names
+    names(tx) <- c('grp', '2005', '2010', '2015', '2016', '2017', '2018')
+    # Transform from wide to long
+    tx <- tx %>%
+      tidyr::gather(year, value, `2005`:`2018`)
+    # Add the indicator
+    tx$indicator <- 'Mean annual per capita OOP by structure'
+    # Add the quintile
+    tx$quintile <- 'Richest'
+  })
+  quintile_data[[length(quintile_data) + 1]] <- tx
+  
+  # Bind together quintile data
+  t2c <- bind_rows(quintile_data)
+  
+  # Relevel quintile
+  t2c$quintile <- factor(t2c$quintile, levels = c('Poorest', '2nd', '3rd', '4th', 'Richest', 'Total population'))
+  
+  
+  # Pop into list
+  out$t2c <- t2c
   
   # Spit back processed data
   return(out)

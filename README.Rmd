@@ -179,6 +179,13 @@ plot_fig5(data = data)
 ```
 
 
+##### T2 data
+
+```{r, fig.height=7}
+plot_t2(data = data)
+```
+
+
 ### Web application
 
 
