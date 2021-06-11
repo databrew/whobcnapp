@@ -4,12 +4,17 @@ library(stringr)
 library(dplyr)
 library(purrr)
 
-# ====================================================================================
-# ****************************** Figure 2 from T0 ************************************
-# ====================================================================================
+# =============================================================================================
+# *************************************** Figure 2 from T0 ************************************
+# =============================================================================================
 extract_t0_fig2 <- function(excel_file_path, save_csv_path) {
   
   fig2 <- readxl::read_excel(excel_file_path, sheet = 2, skip = 12, n_max = 7)
+  
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = 2, skip = 10, n_max = 7) %>% 
+    slice(1) %>% 
+    gather() %>%
+    select(value) %>% drop_na() %>% pull() %>% as.numeric()
   
   # Change name of first column
   names(fig2)[1] <- 'grp'
@@ -19,7 +24,7 @@ extract_t0_fig2 <- function(excel_file_path, save_csv_path) {
   }
   # Tidy up names
   q_part <- rep(c('Poorest', '2nd', '3rd', '4th', 'Richest', 'Total'), 6)
-  y_part <- rep(c(2005, 2010, 2015, 2016, 2017, 2018), each = 6)
+  y_part <- rep(years_extracted, each = 6)
   new_names <- paste0(q_part, '_', y_part)
   names(fig2)[2:ncol(fig2)] <- new_names
   # Transform from wide to long
@@ -50,8 +55,8 @@ extract_t0_fig2 <- function(excel_file_path, save_csv_path) {
 # USAGE: extract_t0_fig2() function example
 # ====================================================================================
 
-extract_t0_fig2(excel_file_path = "data-raw/BUL_Appendix_tables.xlsx",
-                save_csv_path = "data-raw/extracted_csvs/T0/Figure_6_Final.csv")
+extract_t0_fig2(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+                save_csv_path = "../data-raw/extracted_csvs/T0/Figure_6_Final.csv")
 
 
 # ====================================================================================
@@ -88,8 +93,8 @@ extract_t0_fig3 <- function(excel_file_path, save_csv_path) {
 # USAGE: extract_t0_fig3() function example
 # ====================================================================================
 
-extract_t0_fig3(excel_file_path = "data-raw/BUL_Appendix_tables.xlsx",
-                save_csv_path = "data-raw/extracted_csvs/T0/Figure_13_14_Final.csv")
+extract_t0_fig3(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+                save_csv_path = "../data-raw/extracted_csvs/T0/Figure_13_14_Final.csv")
 
 # ====================================================================================
 
@@ -102,9 +107,12 @@ extract_t0_fig3(excel_file_path = "data-raw/BUL_Appendix_tables.xlsx",
 
 extract_t0_fig5 <- function(excel_file_path, save_csv_path) {
   
-  
-  
   fig5 <- readxl::read_excel(excel_file_path, sheet = 2, skip = 57, n_max = 7)
+  # Extract years
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = 2, skip = 55, n_max = 7) %>% 
+    slice(1) %>% 
+    gather() %>%
+    select(value) %>% drop_na() %>% pull() %>% as.numeric()
   
   # Change name of first column
   names(fig5)[1] <- 'grp'
@@ -112,10 +120,14 @@ extract_t0_fig5 <- function(excel_file_path, save_csv_path) {
   for(j in 2:ncol(fig5)){
     fig5[,j] <- as.numeric(unlist(fig5[,j]))
   }
+  
+  
   # Tidy up names
   q_part <- rep(c('Poorest', '2nd', '3rd', '4th', 'Richest', 'Total'), 6)
-  y_part <- rep(c(2005, 2010, 2015, 2016, 2017, 2018), each = 6)
+  y_part <- rep(years_extracted, each = 6) 
+  
   new_names <- paste0(q_part, '_', y_part)
+  
   names(fig5)[2:ncol(fig5)] <- new_names
   # Transform from wide to long
   fig5 <- fig5 %>%
@@ -144,11 +156,10 @@ extract_t0_fig5 <- function(excel_file_path, save_csv_path) {
 # USAGE: extract_t0_fig5() function example
 # ====================================================================================
 
-extract_t0_fig5(excel_file_path = "data-raw/BUL_Appendix_tables.xlsx",
-                save_csv_path = "data-raw/extracted_csvs/T0/Figure_21_Final.csv")
+extract_t0_fig5(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+                save_csv_path = "../data-raw/extracted_csvs/T0/Figure_21_Final.csv")
 
 # ====================================================================================
-
 
 # ====================================================================================
 # ************** Extract fig2, fig3, fig5 from T0 with one fucntion ******************
@@ -165,11 +176,12 @@ general_extraction_t0 <- function(excel_file_path, fig2_save_path, fig3_save_pat
 # USAGE: general_extraction_t0() function example
 # ====================================================================================
 
-general_extraction_t0(excel_file_path = "data-raw/BUL_Appendix_tables.xlsx",
-                      fig2_save_path = "data-raw/extracted_csvs/T0/Figure_6_Final.csv",
-                      fig3_save_path = "data-raw/extracted_csvs/T0/Figure_13_14_Final.csv",
-                      fig5_save_path = "data-raw/extracted_csvs/T0/Figure_21_Final.csv"
+general_extraction_t0(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+                      fig2_save_path = "../data-raw/extracted_csvs/T0/Figure_6_Final.csv",
+                      fig3_save_path = "../data-raw/extracted_csvs/T0/Figure_13_14_Final.csv",
+                      fig5_save_path = "../data-raw/extracted_csvs/T0/Figure_21_Final.csv"
                       )
+
 
 # ====================================================================================
 
