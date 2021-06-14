@@ -32,6 +32,10 @@ extract_table_one_t2 <- function(excel_file_path){
   # message("Table one from t2 extracted")
   table_one_title <- as.character(str_glue('T2_ONE_{table_one_title}.csv'))
   
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
+  
   reslt <- list(
     df = t2_n,
     title = table_one_title
@@ -82,6 +86,10 @@ extract_table_two_t2 <- function(excel_file_path, save_csv_path){
   # message("Table two from t2 extracted")
   
   table_one_title <- as.character(str_glue('T2_TWO_{table_one_title}.csv'))
+  
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
   
   reslt <- list(
     df = t2_n,
@@ -134,6 +142,10 @@ extract_table_three_t2 <- function(excel_file_path, save_csv_path){
   
   table_one_title <- as.character(str_glue('T2_THREE_{table_one_title}.csv'))
   
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
+  
   reslt <- list(
     df = t2_n,
     title = table_one_title
@@ -184,6 +196,10 @@ extract_table_four_t2 <- function(excel_file_path, save_csv_path){
   
   table_title <- as.character(str_glue('T2_FOUR_{table_title}.csv'))
   
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
+  
   reslt <- list(
     df = t2_n,
     title = table_title
@@ -233,6 +249,10 @@ extract_table_five_t2 <- function(excel_file_path, save_csv_path){
   # message("Table five from t2 extracted")
   
   table_title <- as.character(str_glue('T2_FIVE_{table_title}.csv'))
+  
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
   
   reslt <- list(
     df = t2_n,
@@ -286,6 +306,10 @@ extract_table_six_t2 <- function(excel_file_path, save_csv_path){
   
   table_title <- as.character(str_glue('T2_SIX_{table_title}.csv'))
   
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
+  
   reslt <- list(
     df = t2_n,
     title = table_title
@@ -335,6 +359,10 @@ extract_table_seven_t2 <- function(excel_file_path, save_csv_path){
   # write.csv(t2_n, file = str_glue('{save_csv_path}T2_SEVEN_{table_title}.csv'))
   # message("Table seven from t2 extracted")
   table_title <- as.character(str_glue('T2_SEVEN_{table_title}.csv'))
+  
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
   
   reslt <- list(
     df = t2_n,
@@ -386,6 +414,10 @@ extract_table_eight_t2 <- function(excel_file_path, save_csv_path){
   # message("Table eight from t2 extracted")
   
   table_title <- as.character(str_glue('T2_EIGHT_{table_title}.csv'))
+  
+  for(j in 2:ncol(t2_n)){
+    t2_n[,j] <- round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3)
+  }
   
   reslt <- list(
     df = t2_n,

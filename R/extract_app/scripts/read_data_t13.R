@@ -33,7 +33,7 @@ extract_t13 <- function(excel_file_path){
   
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- round(as.numeric(unlist(table1[,j])), digits = 3)
   }
   
   table1 <- table1 %>%

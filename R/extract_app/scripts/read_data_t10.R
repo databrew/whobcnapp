@@ -30,8 +30,10 @@ extract_t10 <- function(excel_file_path){
   header_title <- str_replace_all(str_to_title(header_title), ' ', replacement = '_') 
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- round(as.numeric(unlist(table1[,j])), 3)
   }
+  
+  table1[,1] <- as.integer(unlist(table1[,1]))
   
   # Tidy up names
   

@@ -5,8 +5,8 @@ account: databrew
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 4261458
-bundleId: 4709409
+bundleId: 4716095
 url: https://databrew.shinyapps.io/extract_app_who/
-when: 1623527646.18637
+when: 1623699394.88579
 asMultiple: FALSE
 asStatic: FALSE

@@ -182,7 +182,7 @@ server <- function(input, output, session) {
         req(fig2t0())
         req(input$inputfile)
         fig2t0()
-    })
+    }, digits = 4)
 
     output$downloadDataT0fig2 <- downloadHandler(
         filename = function() {
@@ -206,7 +206,7 @@ server <- function(input, output, session) {
         req(fig3t0())
         req(input$inputfile)
         fig3t0()
-    })
+    }, digits = 4)
     
     output$downloadDataT0fig3 <- downloadHandler(
         filename = function() {
@@ -230,7 +230,7 @@ server <- function(input, output, session) {
         req(fig5t0())
         req(input$inputfile)
         fig5t0()
-    })
+    }, digits = 4)
     
     output$downloadDataT0fig5 <- downloadHandler(
         filename = function() {
@@ -254,7 +254,7 @@ server <- function(input, output, session) {
         req(tablet1())
         req(input$inputfile)
         tablet1()
-    })
+    }, digits = 3)
     
     output$downloadDataT1table1 <- downloadHandler(
         filename = function() {
@@ -278,7 +278,7 @@ server <- function(input, output, session) {
         req(tablet2t_1())
         req(input$inputfile)
         tablet2t_1()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table1 <- downloadHandler(
         filename = function() {
@@ -302,7 +302,7 @@ server <- function(input, output, session) {
         req(tablet2t_2())
         req(input$inputfile)
         tablet2t_2()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table2 <- downloadHandler(
         filename = function() {
@@ -326,7 +326,7 @@ server <- function(input, output, session) {
         req(tablet2t_3())
         req(input$inputfile)
         tablet2t_3()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table3 <- downloadHandler(
         filename = function() {
@@ -350,7 +350,7 @@ server <- function(input, output, session) {
         req(tablet2t_4())
         req(input$inputfile)
         tablet2t_4()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table4 <- downloadHandler(
         filename = function() {
@@ -374,7 +374,7 @@ server <- function(input, output, session) {
         req(tablet2t_5())
         req(input$inputfile)
         tablet2t_5()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table5 <- downloadHandler(
         filename = function() {
@@ -398,7 +398,7 @@ server <- function(input, output, session) {
         req(tablet2t_6())
         req(input$inputfile)
         tablet2t_6()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table6 <- downloadHandler(
         filename = function() {
@@ -422,7 +422,7 @@ server <- function(input, output, session) {
         req(tablet2t_7())
         req(input$inputfile)
         tablet2t_7()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table7 <- downloadHandler(
         filename = function() {
@@ -446,7 +446,7 @@ server <- function(input, output, session) {
         req(tablet2t_8())
         req(input$inputfile)
         tablet2t_8()$df
-    })
+    }, digits = 3)
     
     output$downloadDataT2table8 <- downloadHandler(
         filename = function() {
@@ -470,7 +470,7 @@ server <- function(input, output, session) {
         req(tablet3())
         req(input$inputfile)
         tablet3()
-    })
+    }, digits = 2)
     
     output$downloadDataT3table3 <- downloadHandler(
         filename = function() {
@@ -495,7 +495,7 @@ server <- function(input, output, session) {
         req(tablet5())
         req(input$inputfile)
         tablet5()
-    })
+    }, digits = 2)
     
     output$downloadDataT5table5 <- downloadHandler(
         filename = function() {
@@ -519,7 +519,7 @@ server <- function(input, output, session) {
         req(tablet6())
         req(input$inputfile)
         tablet6()
-    })
+    }, digits = 2)
     
     output$downloadDataT6table6 <- downloadHandler(
         filename = function() {
@@ -543,7 +543,7 @@ server <- function(input, output, session) {
         req(tablet8())
         req(input$inputfile)
         tablet8()
-    })
+    }, digits = 2)
     
     output$downloadDataT8table8 <- downloadHandler(
         filename = function() {
@@ -567,7 +567,7 @@ server <- function(input, output, session) {
         req(tablet10())
         req(input$inputfile)
         tablet10()
-    })
+    }, digits = 3)
     
     output$downloadDataT10table <- downloadHandler(
         filename = function() {
@@ -591,7 +591,7 @@ server <- function(input, output, session) {
         req(tablet13())
         req(input$inputfile)
         tablet13()
-    })
+    }, digits = 3)
     
     output$downloadDataT13table <- downloadHandler(
         filename = function() {

@@ -20,7 +20,7 @@ extract_t0_fig2 <- function(excel_file_path) {
   names(fig2)[1] <- 'grp'
   # Transform from character to numeric
   for(j in 2:ncol(fig2)){
-    fig2[,j] <- as.numeric(unlist(fig2[,j]))
+    fig2[,j] <- round(as.numeric(unlist(fig2[,j])) ,digits = 4)
   }
   # Tidy up names
   q_part <- rep(c('Poorest', '2nd', '3rd', '4th', 'Richest', 'Total'), 6)
@@ -74,7 +74,7 @@ extract_t0_fig3 <- function(excel_file_path) {
   names(fig3)[1] <- 'indicator'
   # Transform from character to numeric
   for(j in 2:ncol(fig3)){
-    fig3[,j] <- as.numeric(unlist(fig3[,j]))
+    fig3[,j] <- round(as.numeric(unlist(fig3[,j])), digits = 4)
   }
   # Transform from wide to long
   fig3 <- fig3 %>%
@@ -118,7 +118,7 @@ extract_t0_fig5 <- function(excel_file_path) {
   names(fig5)[1] <- 'grp'
   # Transform from character to numeric
   for(j in 2:ncol(fig5)){
-    fig5[,j] <- as.numeric(unlist(fig5[,j]))
+    fig5[,j] <- round(as.numeric(unlist(fig5[,j])), digits = 4)
   }
   
   
