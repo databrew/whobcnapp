@@ -26,7 +26,7 @@ extract_t6 <- function(excel_file_path){
   colnames(table1) <- c('indicator', years_extracted)
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- round(as.numeric(unlist(table1[,j])), digits = 2)
+    table1[,j] <- format(round(as.numeric(unlist(table1[,j])), digits = 2),nsmall = 2)
   }
   
   # Tidy up names
