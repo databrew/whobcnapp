@@ -10,16 +10,19 @@ library(purrr)
 
 extract_table_one_t2 <- function(excel_file_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 2, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 2, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
   
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
   
   # Fix column names
   names(t2_n) <- c('quintile', years_extracted)
@@ -64,19 +67,27 @@ extract_table_one_t2 <- function(excel_file_path){
 
 extract_table_two_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 10, n_max = 7)
+  # excel_file_path <- '../../../../../../Desktop/appendix tables/SWE_Appendix_tables_May 2017_clean 02 Jun 2021.xlsx'
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 10, n_max = 7)
+  
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
   
+  if(length(t2_n) == 1){
+    
+    t2_n[years_extracted] <- NA
+    
+  }
   
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
+  t2_n <- t2_n[!is.na(names(t2_n))]
   # Transform from wide to long
   # t2a %>%
   #   tidyr::gather(year, value, `2005`:`2018`)
@@ -120,15 +131,19 @@ extract_table_two_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_three_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 18, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 18, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
   
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
@@ -175,15 +190,20 @@ extract_table_three_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_four_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 26, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 26, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
+  
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
   # Transform from wide to long
@@ -229,15 +249,20 @@ extract_table_four_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_five_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 34, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 34, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
+  
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
   # Transform from wide to long
@@ -285,15 +310,20 @@ extract_table_five_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_six_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 42, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 42, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
+  
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
   # Transform from wide to long
@@ -340,15 +370,20 @@ extract_table_six_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_seven_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 50, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 50, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
+  
   # Fix column names
   names(t2_n) <- c('service', years_extracted)
   # Transform from wide to long
@@ -394,15 +429,20 @@ extract_table_seven_t2 <- function(excel_file_path, save_csv_path){
 
 extract_table_eight_t2 <- function(excel_file_path, save_csv_path){
   # Mean annual per capita OOP by income quintile
-  t2_n <- readxl::read_excel(excel_file_path, sheet = 4, skip = 58, n_max = 7)
+  t2_n <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 58, n_max = 7)
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 4, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T2", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
     pull() %>% 
     as.character()
+  
+  if(length(t2_n) == 1){
+    t2_n[years_extracted] <- NA
+  }
+  
   # Fix column names
   names(t2_n) <- c('indicator', years_extracted)
   # Transform from wide to long
@@ -418,6 +458,12 @@ extract_table_eight_t2 <- function(excel_file_path, save_csv_path){
   for(j in 2:ncol(t2_n)){
     t2_n[,j] <- format(round(as.numeric(round(unlist(t2_n[,j]), digits = 3)), digits = 3),nsmall = 3)
   }
+  
+  
+  t2_n <- t2_n %>%
+    rename(
+      `service` = `indicator`
+    )
   
   reslt <- list(
     df = t2_n,

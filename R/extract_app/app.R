@@ -1,5 +1,7 @@
 library(shiny)
 library(shinydashboard)
+library(shinycssloaders)
+
 
 source(file = 'scripts/read_data_t0.R')
 source(file = 'scripts/read_data_t1.R')
@@ -10,6 +12,7 @@ source(file = 'scripts/read_data_t6.R')
 source(file = 'scripts/read_data_t8.R')
 source(file = 'scripts/read_data_t10.R')
 source(file = 'scripts/read_data_t13.R')
+source(file = 'scripts/combined.R')
 
 # Define UI for application 
 ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
@@ -17,17 +20,42 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
     dashboardSidebar(
         sidebarMenu(
             menuItem("Dashboard", tabName = "dashboard", icon = icon("home")),
-            menuItem("T0", tabName = "t0", icon = icon("list")),
-            menuItem("T1", tabName = "t1", icon = icon("list")),
-            menuItem("T2", tabName = "t2", icon = icon("list")),
-            menuItem("T3", tabName = "t3", icon = icon("list")),
-            menuItem("T5", tabName = "t5", icon = icon("list")),
-            menuItem("T6", tabName = "t6", icon = icon("list")),
-            menuItem("T8", tabName = "t8", icon = icon("list")),
-            menuItem("T10", tabName = "t10", icon = icon("list")),
-            menuItem("T13", tabName = "t13", icon = icon("list"))
+            menuItem("Sheets", startExpanded = TRUE, icon = icon("align-left"),
+                     menuSubItem("T0", tabName = "t0", icon = icon("list")),
+                     menuSubItem("T1", tabName = "t1", icon = icon("list")),
+                     menuSubItem("T2", tabName = "t2", icon = icon("list")),
+                     menuSubItem("T3", tabName = "t3", icon = icon("list")),
+                     menuSubItem("T5", tabName = "t5", icon = icon("list")),
+                     menuSubItem("T6", tabName = "t6", icon = icon("list")),
+                     menuSubItem("T8", tabName = "t8", icon = icon("list")),
+                     menuSubItem("T10", tabName = "t10", icon = icon("list")),
+                     menuSubItem("T13", tabName = "t13", icon = icon("list"))
+                     ),
+            menuItem("Combined", tabName = "combined", icon = icon("battery-full"))
         )
     ),
+    # dashboardSidebar(
+    #     sidebarUserPanel("User Name",
+    #                      subtitle = a(href = "#", icon("circle", class = "text-success"), "Online"),
+    #                      # Image file should be in www/ subdir
+    #                      image = "userimage.png"
+    #     ),
+    #     sidebarSearchForm(label = "Enter a number", "searchText", "searchButton"),
+    #     sidebarMenu(
+    #         # Setting id makes input$tabs give the tabName of currently-selected tab
+    #         id = "tabs",
+    #         menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
+    #         menuItem("Widgets", icon = icon("th"), tabName = "widgets", badgeLabel = "new",
+    #                  badgeColor = "green"),
+    #         menuItem("Charts", icon = icon("bar-chart-o"),
+    #                  menuItem("One more", icon = icon("bar-chart-o"),
+    #                             menuSubItem("Sub-item 3", tabName = "subitem3")
+    #                           ),
+    #                  menuSubItem("Sub-item 1", tabName = "subitem1"),
+    #                  menuSubItem("Sub-item 2", tabName = "subitem2")
+    #         )
+    #     )
+    # ),
     dashboardBody(
         tabItems(
             tabItem("dashboard",
@@ -49,17 +77,20 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                         tabPanel("Fig.2", 
                                  tags$hr(),
                                  downloadButton("downloadDataT0fig2", "Download Fig.2 from T0"),
-                                 tableOutput("filetable_fig2")
+                                 tableOutput("filetable_fig2"),
+                                 uiOutput('nofig2T0')
                                  ),
                         tabPanel("Fig.3", 
                                  tags$hr(),
                                  downloadButton("downloadDataT0fig3", "Download Fig.3 from T0"),
-                                 tableOutput("filetable_fig3")
+                                 tableOutput("filetable_fig3"),
+                                 uiOutput('nofig3T0')
                                  ),
                         tabPanel("Fig.5", 
                                  tags$hr(),
                                  downloadButton("downloadDataT0fig5", "Download Fig.5 from T0"),
-                                 tableOutput("filetable_fig5")
+                                 tableOutput("filetable_fig5"),
+                                 uiOutput('noT0')
                                  )
                     )
             ),
@@ -156,6 +187,14 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                     downloadButton("downloadDataT13table", "Download Table from T13"),
                     tableOutput("filetable_table13")
                     
+            ),
+            tabItem("combined",
+                    div(p("Combined tab content")),
+                    tags$hr(),
+                    downloadButton("downloadCombinedData", "Download Combined Data"),
+                    tableOutput("filetable_table_combined") %>% shinycssloaders::withSpinner(type = 8, color = "#f39c12")
+                    
+                    
             )
 
             
@@ -178,20 +217,43 @@ server <- function(input, output, session) {
         return(fig2)
     })
     
-    output$filetable_fig2 <- renderTable({
-        req(fig2t0())
+    
+    # Observe if T0 exists
+    observe({
+        # req(fig2t0())
         req(input$inputfile)
-        fig2t0()
-    }, digits = 4)
-
-    output$downloadDataT0fig2 <- downloadHandler(
-        filename = function() {
-            paste0('Figure_6_Final', ".csv")
-        },
-        content = function(file) {
-            write.csv(fig2t0(), file)
+        
+        if("T0" %in% excel_sheets(input$inputfile$datapath)){
+            if(ncol(read_excel(input$inputfile$datapath, sheet = 'T0')) > 0){
+                output$filetable_fig2 <- renderTable({
+                    fig2t0()
+                }, digits = 4)
+                
+                output$downloadDataT0fig2 <- downloadHandler(
+                    filename = function() {
+                        paste0('Figure_6_Final', ".csv")
+                    },
+                    content = function(file) {
+                        write.csv(fig2t0(), file)
+                    }
+                )
+            } else {
+                output$nofig2T0 <- renderUI({
+                    tagList(
+                        tags$p(str_glue("No data detected in the T0 sheet!"))
+                    )
+                })
+            }
+        } else {
+            
+            output$nofig2T0 <- renderUI({
+                tagList(
+                    tags$p(str_glue("The {input$inputfile$name} file doesn't consist the T0 sheet!"))
+                )
+            })
+            
         }
-    )
+    })
     
     
     #### T0 Fig.3
@@ -202,20 +264,43 @@ server <- function(input, output, session) {
         return(fig3)
     })
     
-    output$filetable_fig3 <- renderTable({
-        req(fig3t0())
-        req(input$inputfile)
-        fig3t0()
-    }, digits = 4)
     
-    output$downloadDataT0fig3 <- downloadHandler(
-        filename = function() {
-            paste0('Figure_13_14_Final', ".csv")
-        },
-        content = function(file) {
-            write.csv(fig3t0(), file)
+    # Observe if T0 exists
+    observe({
+        # req(fig3t0())
+        req(input$inputfile)
+        
+        if("T0" %in% excel_sheets(input$inputfile$datapath)){
+            if(ncol(read_excel(input$inputfile$datapath, sheet = 'T0')) > 0){
+                output$filetable_fig3 <- renderTable({
+                    fig3t0()
+                }, digits = 4)
+                
+                output$downloadDataT0fig3 <- downloadHandler(
+                    filename = function() {
+                        paste0('Figure_13_14_Final', ".csv")
+                    },
+                    content = function(file) {
+                        write.csv(fig3t0(), file)
+                    }
+                )
+            } else {
+                output$nofig3T0 <- renderUI({
+                    tagList(
+                        tags$p(str_glue("No data detected in the T0 sheet!"))
+                    )
+                })
+            }
+        } else {
+            
+            output$nofig3T0 <- renderUI({
+                tagList(
+                    tags$p(str_glue("The {input$inputfile$name} file doesn't consist the T0 sheet!"))
+                )
+            })
+            
         }
-    )
+    })
     
     
     #### T0 Fig.5
@@ -226,21 +311,48 @@ server <- function(input, output, session) {
         return(fig5)
     })
     
-    output$filetable_fig5 <- renderTable({
-        req(fig5t0())
+    # Observe if T0 exists
+    observe({
+        # req(fig5t0())
         req(input$inputfile)
-        fig5t0()
-    }, digits = 4)
-    
-    output$downloadDataT0fig5 <- downloadHandler(
-        filename = function() {
-            paste0('Figure_21_Final', ".csv")
-        },
-        content = function(file) {
-            write.csv(fig5t0(), file)
+        
+        if("T0" %in% excel_sheets(input$inputfile$datapath)){
+            if(ncol(read_excel(input$inputfile$datapath, sheet = 'T0')) > 0){
+            output$filetable_fig5 <- renderTable({
+                fig5t0()
+            }, digits = 4)
+            
+            output$BTNfig5 <- renderUI({
+                tagList(
+                    downloadButton("downloadDataT0fig5", "Download Fig.5 from T0")
+                )
+            })
+            
+            output$downloadDataT0fig5 <- downloadHandler(
+                filename = function() {
+                    paste0('Figure_21_Final', ".csv")
+                },
+                content = function(file) {
+                    write.csv(fig5t0(), file)
+                }
+            )
+            } else {
+                output$noT0 <- renderUI({
+                    tagList(
+                        tags$p(str_glue("No data detected in the T0 sheet!"))
+                    )
+                })
+            }
+        } else {
+        
+            output$noT0 <- renderUI({
+                tagList(
+                    tags$p(str_glue("The {input$inputfile$name} file doesn't consist the T0 sheet!"))
+                )
+            })
+        
         }
-    )
-    
+    })
     
     #### T1 table
     
@@ -602,6 +714,27 @@ server <- function(input, output, session) {
         }
     )
     
+    #### Combined by country table
+    table_combined_by_country <- reactive({
+        req(input$inputfile$datapath)
+        combined_table <- combine_data_by_country(xls_path = input$inputfile$datapath, file_name = input$inputfile$name)
+        return(combined_table)
+    })
+    
+    output$filetable_table_combined <- renderTable({
+        req(table_combined_by_country())
+        req(input$inputfile)
+        table_combined_by_country()
+    }, digits = 3)
+    
+    output$downloadCombinedData <- downloadHandler(
+        filename = function() {
+            paste0(str_glue('{substr(input$inputfile$name, start = 1, stop = 3)}_Combined'), ".csv")
+        },
+        content = function(file) {
+            write.csv(table_combined_by_country(), file)
+        }
+    )
     
 }
 

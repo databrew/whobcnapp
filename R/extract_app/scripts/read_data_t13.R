@@ -13,11 +13,11 @@ library(purrr)
 
 extract_t13 <- function(excel_file_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 15, skip = 3) %>% 
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T13", skip = 3) %>% 
     select(1, 19:20)
   
   
-  years <- readxl::read_excel(excel_file_path, sheet = 15, skip = 3) %>% 
+  years <- readxl::read_excel(excel_file_path, sheet = "T13", skip = 3) %>% 
     select(1, 19:20) %>%
     select(Year) %>% drop_na() %>% pull() 
   

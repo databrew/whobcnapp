@@ -13,10 +13,10 @@ library(purrr)
 
 extract_t6 <- function(excel_file_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 8)
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T6")
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 8, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T6", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
