@@ -326,8 +326,8 @@ extract_table_eight_t2 <- function(excel_file_path, save_csv_path){
 # USAGE: extract_table_eight_t2() function example
 # ====================================================================================
 
-extract_table_eight_t2(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
-                       save_csv_path = "../data-raw/extracted_csvs/T2/")
+# extract_table_eight_t2(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+#                        save_csv_path = "../data-raw/extracted_csvs/T2/")
 
 # read_csv("../data-raw/extracted_csvs/T2/T2_EIGHT_Share_of_OOP_spending_by_structure_(5th_quintile_richest).csv")
 

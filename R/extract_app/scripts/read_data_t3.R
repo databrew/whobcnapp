@@ -61,3 +61,33 @@ extract_t3 <- function(excel_file_path){
 # ====================================================================================
 
 
+extract_t3_fig13 <- function(excel_file_path) {
+  table <- readxl::read_excel(excel_file_path, sheet = "T3")
+  
+  # Title years
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T3", skip = 0, n_max = 1) %>% 
+    gather() %>% 
+    select(value) %>% 
+    drop_na() %>% 
+    pull() %>% 
+    as.character()
+  
+  colnames(table) <- c('indicator', years_extracted)
+  
+  for(j in 2:ncol(table)){
+    table[,j] <- as.numeric(round(unlist(table[,j]), digits = 2))
+  }
+  table[47, ]$indicator <- str_glue('{table[44, ]$indicator}- {table[47, ]$indicator}') 
+  
+  table <- table %>%
+    slice(c(42:43, 47)) %>%
+    pivot_longer(cols = 2:ncol(table), names_to = "Year", values_to = "value", names_repair = "unique") %>%
+    pivot_wider(names_from = "indicator", values_from = "value")
+  
+  # write.csv(table, file = save_csv_path)
+  
+  message("Table extracted from T3 (fig13)")  
+  
+  return(table)
+  
+}

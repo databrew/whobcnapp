@@ -7,9 +7,11 @@ source(file = 'scripts/read_data_t0.R')
 source(file = 'scripts/read_data_t1.R')
 source(file = 'scripts/read_data_t2.R')
 source(file = 'scripts/read_data_t3.R')
+source(file = 'scripts/read_data_t4.R')
 source(file = 'scripts/read_data_t5.R')
 source(file = 'scripts/read_data_t6.R')
 source(file = 'scripts/read_data_t8.R')
+source(file = 'scripts/read_data_t9.R')
 source(file = 'scripts/read_data_t10.R')
 source(file = 'scripts/read_data_t13.R')
 source(file = 'scripts/combined.R')
@@ -25,9 +27,11 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                      menuSubItem("T1", tabName = "t1", icon = icon("list")),
                      menuSubItem("T2", tabName = "t2", icon = icon("list")),
                      menuSubItem("T3", tabName = "t3", icon = icon("list")),
+                     menuSubItem("T4", tabName = "t4", icon = icon("list")),
                      menuSubItem("T5", tabName = "t5", icon = icon("list")),
                      menuSubItem("T6", tabName = "t6", icon = icon("list")),
                      menuSubItem("T8", tabName = "t8", icon = icon("list")),
+                     menuSubItem("T9", tabName = "t9", icon = icon("list")),
                      menuSubItem("T10", tabName = "t10", icon = icon("list")),
                      menuSubItem("T13", tabName = "t13", icon = icon("list"))
                      ),
@@ -149,8 +153,25 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
             tabItem("t3",
                     div(p("t3 tab content")),
                     tags$hr(),
-                    downloadButton("downloadDataT3table3", "Download Table from T3"),
-                    tableOutput("filetable_table3")
+                    tabsetPanel(
+                        tabPanel("Fig.3", 
+                                 tags$hr(),
+                                 downloadButton("downloadDataT3table3", "Download Table (Fig.3) from T3"),
+                                 tableOutput("filetable_table3")
+                        ),
+                        tabPanel("Fig.13", 
+                                 tags$hr(),
+                                 downloadButton("downloadDataT3table3_fig13", "Download Table (Fig.13) from T3"),
+                                 tableOutput("filetable_table3_fig13")
+                        )
+                    )
+                    
+            ),
+            tabItem("t4",
+                    div(p("t4 tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataT4table4", "Download Table from T4"),
+                    tableOutput("filetable_table4")
                     
             ),
             tabItem("t5",
@@ -172,6 +193,13 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                     tags$hr(),
                     downloadButton("downloadDataT8table8", "Download Table from T8"),
                     tableOutput("filetable_table8")
+                    
+            ),
+            tabItem("t9",
+                    div(p("t9 tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataT9table9", "Download Table from T9"),
+                    tableOutput("filetable_table9")
                     
             ),
             tabItem("t10",
@@ -570,7 +598,7 @@ server <- function(input, output, session) {
     )
     
     
-    #### T3 table
+    #### T3 table (fig.3)
     
     tablet3 <- reactive({
         req(input$inputfile$datapath)
@@ -593,6 +621,51 @@ server <- function(input, output, session) {
         }
     )
     
+    #### T3 table (fig.13)
+    
+    tablet3_fig13 <- reactive({
+        req(input$inputfile$datapath)
+        table1 <- extract_t3_fig13(excel_file_path = input$inputfile$datapath)
+        return(table1)
+    })
+    
+    output$filetable_table3_fig13 <- renderTable({
+        req(tablet3_fig13())
+        req(input$inputfile)
+        tablet3_fig13()
+    }, digits = 2)
+    
+    output$downloadDataT3table3_fig13 <- downloadHandler(
+        filename = function() {
+            paste0('T3_Figure_13_Final', ".csv")
+        },
+        content = function(file) {
+            write.csv(tablet3_fig13(), file)
+        }
+    )
+    
+    #### T4 table
+    
+    tablet4 <- reactive({
+        req(input$inputfile$datapath)
+        table1 <- extract_t4(excel_file_path = input$inputfile$datapath)
+        return(table1)
+    })
+    
+    output$filetable_table4 <- renderTable({
+        req(tablet4())
+        req(input$inputfile)
+        tablet4()
+    }, digits = 2)
+    
+    output$downloadDataT4table4 <- downloadHandler(
+        filename = function() {
+            paste0('T4_Figure_14_Final', ".csv")
+        },
+        content = function(file) {
+            write.csv(tablet4(), file)
+        }
+    )
     
     
     #### T5 table
@@ -663,6 +736,30 @@ server <- function(input, output, session) {
         },
         content = function(file) {
             write.csv(tablet8(), file)
+        }
+    )
+    
+    
+    #### T9 table
+    
+    tablet9 <- reactive({
+        req(input$inputfile$datapath)
+        table1 <- extract_t9(excel_file_path = input$inputfile$datapath)
+        return(table1)
+    })
+    
+    output$filetable_table9 <- renderTable({
+        req(tablet9())
+        req(input$inputfile)
+        tablet9()
+    }, digits = 2)
+    
+    output$downloadDataT9table9 <- downloadHandler(
+        filename = function() {
+            paste0('T9_Figure_21_Final', ".csv")
+        },
+        content = function(file) {
+            write.csv(tablet9(), file)
         }
     )
     
