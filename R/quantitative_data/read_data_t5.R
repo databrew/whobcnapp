@@ -6,17 +6,17 @@ library(purrr)
 
 
 # =============================================================================================
-# **************************************** Table from T6 **************************************
+# **************************************** Table from T5** ************************************
 # =============================================================================================
 
 
 
-extract_t6 <- function(excel_file_path, save_csv_path){ 
+extract_t5 <- function(excel_file_path, save_csv_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 8)
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T5")
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 8, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T5", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
@@ -26,7 +26,7 @@ extract_t6 <- function(excel_file_path, save_csv_path){
   colnames(table1) <- c('indicator', years_extracted)
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- format(round(as.numeric(unlist(table1[,j])), digits = 2),nsmall = 2)
   }
   
   # Tidy up names
@@ -37,7 +37,8 @@ extract_t6 <- function(excel_file_path, save_csv_path){
   
   names(table1)[2:ncol(table1)] <- new_names
   
-  table1 <- table1 %>% slice(25) 
+  
+  table1 <- table1 %>% slice(53) 
   # Transform from wide to long
   table1 <- table1 %>%
     tidyr::gather(year, value, names(table1)[2]:names(table1)[ncol(table1)])
@@ -49,29 +50,31 @@ extract_t6 <- function(excel_file_path, save_csv_path){
     rename(
       `Income Quintile` = quintile,
       Year = year
-    )
-  
+    ) %>% pivot_wider(names_from = 'indicator', values_from = 'value')
   
   write.csv(table1, file = save_csv_path)
   
-  message("Table extracted from T6")  
+  message("Table extracted from T5")
+  
+  return(table1)
+  
 }
 
 
 # ====================================================================================
-# USAGE: extract_t6() function example
+# USAGE: extract_t5() function example
 # ====================================================================================
 
-### NOTES FOR KATE ###
+### NOTES ###
 # just changes `excel_file_path` where .xls is located, 
 # also you can change `save_csv_path`- directory where to save extracted .csv (it is optional)
 # Then just run the R script
 
 
-extract_t6(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
-           save_csv_path = "../data-raw/extracted_csvs/T6/T6_Figure_16_Final.csv")
+# extract_t5(excel_file_path = "../data-raw/LVA_Appendix_tables_Aug_2020.xlsx",
+#            save_csv_path = "../data-raw/extracted_csvs/T5/T5_Figure_4_Final.csv")
 
+# read_csv('../data-raw/extracted_csvs/T5/T5_Figure_4_Final.csv')
 
 # ====================================================================================
 
-# read_csv('../data-raw/extracted_csvs/T6/T6_Figure_16_Final.csv')

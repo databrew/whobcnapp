@@ -13,11 +13,11 @@ library(purrr)
 
 extract_t13 <- function(excel_file_path, save_csv_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 15, skip = 3) %>% 
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T13", skip = 3) %>% 
     select(1, 19:20)
   
   
-  years <- readxl::read_excel(excel_file_path, sheet = 15, skip = 3) %>% 
+  years <- readxl::read_excel(excel_file_path, sheet = "T13", skip = 3) %>% 
     select(1, 19:20) %>%
     select(Year) %>% drop_na() %>% pull() 
   
@@ -33,21 +33,25 @@ extract_t13 <- function(excel_file_path, save_csv_path){
   
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- format(round(as.numeric(unlist(table1[,j])), digits = 3),nsmall = 3)
   }
+  
+  table1 <- table1 %>%
+    mutate(Year = as.integer(Year))
   
   # Tidy up names
   
-  # return(table1)
-  
   write.csv(table1, file = save_csv_path)
 
-  message("Table extracted from T0")
+  message("Table extracted from T13")
+  
+  return(table1)
+  
 }
 
 
 # ====================================================================================
-# USAGE: extract_t10() function example
+# USAGE: extract_t13() function example
 # ====================================================================================
 
 ### NOTES FOR KATE ###
@@ -56,8 +60,8 @@ extract_t13 <- function(excel_file_path, save_csv_path){
 # Then just run the R script
 
 
-extract_t13(excel_file_path = "../data-raw/LVA_Appendix_tables_Aug_2020.xlsx",
-           save_csv_path = "../data-raw/extracted_csvs/T13/T13_Figure_22_and_24_Final.csv")
+# extract_t13(excel_file_path = "../data-raw/LVA_Appendix_tables_Aug_2020.xlsx",
+#            save_csv_path = "../data-raw/extracted_csvs/T13/T13_Figure_22_and_24_Final.csv")
 
 
 # ====================================================================================

@@ -6,17 +6,17 @@ library(purrr)
 
 
 # =============================================================================================
-# **************************************** Table from T8 **************************************
+# **************************************** Table from T6 **************************************
 # =============================================================================================
 
 
 
-extract_t8 <- function(excel_file_path, save_csv_path){ 
+extract_t6 <- function(excel_file_path, save_csv_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 10)
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T6")
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 10, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T6", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
@@ -26,12 +26,12 @@ extract_t8 <- function(excel_file_path, save_csv_path){
   colnames(table1) <- c('indicator', years_extracted)
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- format(round(as.numeric(unlist(table1[,j])), digits = 2),nsmall = 2)
   }
   
   # Tidy up names
-  q_part <- rep(c('Medicines', 'Medical products', 'Outpatient care', 'Dental', 'Diagnostic tests', 'Inpatient care'), 6)
-  y_part <- rep(years_extracted, each = 6) 
+  q_part <- rep(c('Poorest', '2nd', '3rd', '4th', 'Richest'), 5)
+  y_part <- rep(years_extracted, each = 5) 
   
   new_names <- paste0(q_part, '_', y_part)
   
@@ -49,17 +49,19 @@ extract_t8 <- function(excel_file_path, save_csv_path){
     rename(
       `Income Quintile` = quintile,
       Year = year
-    )
-  
+    ) %>% pivot_wider(names_from = 'indicator', values_from = 'value')
   
   write.csv(table1, file = save_csv_path)
   
-  message("Table extracted from T8")  
+  message("Table extracted from T6")
+  
+  return(table1)
+  
 }
 
 
 # ====================================================================================
-# USAGE: extract_t8() function example
+# USAGE: extract_t6() function example
 # ====================================================================================
 
 ### NOTES FOR KATE ###
@@ -68,10 +70,10 @@ extract_t8 <- function(excel_file_path, save_csv_path){
 # Then just run the R script
 
 
-extract_t8(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
-           save_csv_path = "../data-raw/extracted_csvs/T8/T8_Figure_20_Final.csv")
+# extract_t6(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+#            save_csv_path = "../data-raw/extracted_csvs/T6/T6_Figure_16_Final.csv")
 
 
 # ====================================================================================
 
-# read_csv('../data-raw/extracted_csvs/T8/T8_Figure_20_Final.csv')
+# read_csv('../data-raw/extracted_csvs/T6/T6_Figure_16_Final.csv')

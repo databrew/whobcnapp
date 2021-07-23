@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(shinycssloaders)
+library(shinymaterial)
 
 
 source(file = 'scripts/read_data_t0.R')
@@ -15,14 +16,19 @@ source(file = 'scripts/read_data_t9.R')
 source(file = 'scripts/read_data_t10.R')
 source(file = 'scripts/read_data_t13.R')
 source(file = 'scripts/combined.R')
+source(file = 'scripts/qualitative data/pe_c_data.R')
+source(file = 'scripts/qualitative data/pe_data.R')
+source(file = 'scripts/qualitative data/uc_c_data.R')
+source(file = 'scripts/qualitative data/uc_data.R')
 
 # Define UI for application 
 ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
     dashboardHeader(title = 'Extract .csv app'),
     dashboardSidebar(
         sidebarMenu(
-            menuItem("Dashboard", tabName = "dashboard", icon = icon("home")),
-            menuItem("Sheets", startExpanded = TRUE, icon = icon("align-left"),
+            menuItem("Quantitative Data Upload", tabName = "dashboard", icon = icon("home")),
+            menuItem("Qualitative Data Upload", tabName = "dashboard_plus", icon = icon("home")),
+            menuItem("Sheets (Quantitative)", startExpanded = TRUE, icon = icon("align-left"),
                      menuSubItem("T0", tabName = "t0", icon = icon("list")),
                      menuSubItem("T1", tabName = "t1", icon = icon("list")),
                      menuSubItem("T2", tabName = "t2", icon = icon("list")),
@@ -35,7 +41,13 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                      menuSubItem("T10", tabName = "t10", icon = icon("list")),
                      menuSubItem("T13", tabName = "t13", icon = icon("list"))
                      ),
-            menuItem("Combined", tabName = "combined", icon = icon("battery-full"))
+            menuItem("Combined (Quantitative)", tabName = "combined", icon = icon("battery-full")),
+            menuItem("Sheets (Qualitative)", startExpanded = TRUE, icon = icon("align-left"),
+                     menuSubItem("PopEntitlement_Changes", tabName = "pe_c", icon = icon("list")),
+                     menuSubItem("Population Entitelment", tabName = "pe", icon = icon("list")),
+                     menuSubItem("UC_Changes", tabName = "uc_c", icon = icon("list")),
+                     menuSubItem("User Charges", tabName = "uc", icon = icon("list"))
+            )
         )
     ),
     # dashboardSidebar(
@@ -73,6 +85,19 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                                          ".xlsx")
                               ),
                     tableOutput("files")
+                    
+            ),
+            tabItem("dashboard_plus",
+                    div(p("Qualitative Data Upload")),
+                    tags$hr(),
+                    
+                    # Input: Select a file ----
+                    fileInput("inputfile_plus", "Choose XLSX File",
+                              multiple = FALSE,
+                              accept = c("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                         ".xlsx")
+                    ),
+                    tableOutput("files_plus")
                     
             ),
             tabItem("t0",
@@ -216,6 +241,34 @@ ui <- dashboardPage(title = "Extract csv", skin = 'yellow',
                     tableOutput("filetable_table13")
                     
             ),
+            tabItem("uc",
+                    div(p("UC tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataUC", "Download Table from UC"),
+                    tableOutput("filetable_UC")
+                    
+            ),
+            tabItem("uc_c",
+                    div(p("UC_C tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataUC_C", "Download Table from UC_C"),
+                    tableOutput("filetable_UC_C")
+                    
+            ),
+            tabItem("pe",
+                    div(p("PE tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataPE", "Download Table from PE"),
+                    tableOutput("filetable_PE")
+                    
+            ),
+            tabItem("pe_c",
+                    div(p("PE_C tab content")),
+                    tags$hr(),
+                    downloadButton("downloadDataPE_C", "Download Table from PE_C"),
+                    tableOutput("filetable_PE_C")
+                    
+            ),
             tabItem("combined",
                     div(p("Combined tab content")),
                     tags$hr(),
@@ -236,6 +289,9 @@ server <- function(input, output, session) {
     
     # Main page file path table
     output$files <- renderTable(input$inputfile)
+    
+    # Main page file path table
+    output$files_plus <- renderTable(input$inputfile_plus)
     
     #### T0 Fig.2
     
@@ -832,6 +888,102 @@ server <- function(input, output, session) {
             write.csv(table_combined_by_country(), file)
         }
     )
+    
+    
+    #### fig.4 qualitative table
+    
+    fig4_table <- reactive({
+        req(input$inputfile_plus$datapath)
+        table1 <- extract_pe_c(excel_file_path = input$inputfile_plus$datapath)
+        return(table1)
+    })
+    
+    output$filetable_PE_C <- renderTable({
+        req(fig4_table())
+        req(input$inputfile_plus)
+        fig4_table()
+    })
+    
+    output$downloadDataPE_C <- downloadHandler(
+        filename = function() {
+            paste0('PC_C_Figure_4', ".csv")
+        },
+        content = function(file) {
+            write.csv(fig4_table(), file, row.names = FALSE)
+        }
+    )
+    
+    
+    #### fig.7 qualitative table
+    
+    fig7_table <- reactive({
+        req(input$inputfile_plus$datapath)
+        table1 <- extract_pe(excel_file_path = input$inputfile_plus$datapath)
+        return(table1)
+    })
+    
+    output$filetable_PE <- renderTable({
+        req(fig7_table())
+        req(input$inputfile_plus)
+        fig7_table()
+    })
+    
+    output$downloadDataPE <- downloadHandler(
+        filename = function() {
+            paste0('PE_Figure_7', ".csv")
+        },
+        content = function(file) {
+            write.csv(fig7_table(), file, row.names = FALSE)
+        }
+    )
+    
+    
+    #### fig.10 qualitative table
+    
+    fig10_table <- reactive({
+        req(input$inputfile_plus$datapath)
+        table1 <- extract_uc_c(excel_file_path = input$inputfile_plus$datapath)
+        return(table1)
+    })
+    
+    output$filetable_UC_C <- renderTable({
+        req(fig10_table())
+        req(input$inputfile_plus)
+        fig10_table()
+    })
+    
+    output$downloadDataUC_C <- downloadHandler(
+        filename = function() {
+            paste0('UC_C_Figure_10', ".csv")
+        },
+        content = function(file) {
+            write.csv(fig10_table(), file, row.names = FALSE)
+        }
+    )
+    
+    #### fig.13 qualitative table
+    
+    fig13_table <- reactive({
+        req(input$inputfile_plus$datapath)
+        table1 <- extract_uc(excel_file_path = input$inputfile_plus$datapath)
+        return(table1)
+    })
+    
+    output$filetable_UC <- renderTable({
+        req(fig13_table())
+        req(input$inputfile_plus)
+        fig13_table()
+    })
+    
+    output$downloadDataUC <- downloadHandler(
+        filename = function() {
+            paste0('UC_Figure_13', ".csv")
+        },
+        content = function(file) {
+            write.csv(fig13_table(), file, row.names = FALSE)
+        }
+    )
+    
     
 }
 

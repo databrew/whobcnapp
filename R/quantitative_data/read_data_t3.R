@@ -26,7 +26,7 @@ extract_t3 <- function(excel_file_path, save_csv_path){
   colnames(table1) <- c('indicator', years_extracted)
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(round(unlist(table1[,j]), digits = 2))
+    table1[,j] <- format(round(as.numeric(round(unlist(table1[,j]), digits = 2)), digits = 2),nsmall = 2)
   }
   
   table1 <- table1 %>%
@@ -35,8 +35,11 @@ extract_t3 <- function(excel_file_path, save_csv_path){
     pivot_wider(names_from = "indicator", values_from = "value")
   
   write.csv(table1, file = save_csv_path)
+
+  message("Table extracted from T3")
   
-  message("Table extracted from T3")  
+  return(table1)
+  
 }
 
 
@@ -44,7 +47,7 @@ extract_t3 <- function(excel_file_path, save_csv_path){
 # USAGE: extract_t3() function example
 # ====================================================================================
 
-### NOTES FOR KATE ###
+### NOTES ###
 # just changes `excel_file_path` where .xls is located, 
 # also you can change `save_csv_path`- directory where to save extracted .csv (it is optional)
 # Then just run the R script
@@ -57,7 +60,6 @@ extract_t3 <- function(excel_file_path, save_csv_path){
 
 # ====================================================================================
 
-# excel_file_path <- "../../../../Downloads/LVA_Appendix_tables_Aug 2020_clean 03 Jun 2021.xlsx"
 
 extract_t3_fig13 <- function(excel_file_path, save_csv_path) {
   table <- readxl::read_excel(excel_file_path, sheet = "T3")
@@ -85,6 +87,7 @@ extract_t3_fig13 <- function(excel_file_path, save_csv_path) {
   write.csv(table, file = save_csv_path)
   
   message("Table extracted from T3 (fig13)")  
+  
+  return(table)
+  
 }
-
-

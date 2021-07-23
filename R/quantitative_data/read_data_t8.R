@@ -6,17 +6,17 @@ library(purrr)
 
 
 # =============================================================================================
-# **************************************** Table from T5** ************************************
+# **************************************** Table from T8 **************************************
 # =============================================================================================
 
 
 
-extract_t5 <- function(excel_file_path, save_csv_path){ 
+extract_t8 <- function(excel_file_path, save_csv_path){ 
   
-  table1 <- readxl::read_excel(excel_file_path, sheet = 7)
+  table1 <- readxl::read_excel(excel_file_path, sheet = "T8")
   
   # Title years
-  years_extracted <- readxl::read_excel(excel_file_path, sheet = 7, skip = 0, n_max = 1) %>% 
+  years_extracted <- readxl::read_excel(excel_file_path, sheet = "T8", skip = 0, n_max = 1) %>% 
     gather() %>% 
     select(value) %>% 
     drop_na() %>% 
@@ -26,19 +26,18 @@ extract_t5 <- function(excel_file_path, save_csv_path){
   colnames(table1) <- c('indicator', years_extracted)
   
   for(j in 2:ncol(table1)){
-    table1[,j] <- as.numeric(unlist(table1[,j]))
+    table1[,j] <- format(round(as.numeric(unlist(table1[,j])), digits = 2),nsmall = 2)
   }
   
   # Tidy up names
-  q_part <- rep(c('Poorest', '2nd', '3rd', '4th', 'Richest'), 5)
-  y_part <- rep(years_extracted, each = 5) 
+  q_part <- rep(c('Medicines', 'Medical products', 'Outpatient care', 'Dental', 'Diagnostic tests', 'Inpatient care'), 6)
+  y_part <- rep(years_extracted, each = 6) 
   
   new_names <- paste0(q_part, '_', y_part)
   
   names(table1)[2:ncol(table1)] <- new_names
   
-  
-  table1 <- table1 %>% slice(53) 
+  table1 <- table1 %>% slice(25) 
   # Transform from wide to long
   table1 <- table1 %>%
     tidyr::gather(year, value, names(table1)[2]:names(table1)[ncol(table1)])
@@ -48,19 +47,21 @@ extract_t5 <- function(excel_file_path, save_csv_path){
     mutate(year = unlist(lapply(strsplit(year, split = '_'), function(x){x[2]}))) %>%
     select(year, quintile, value, indicator) %>%
     rename(
-      `Income Quintile` = quintile,
+      Service = quintile,
       Year = year
-    )
-  
+    ) %>% pivot_wider(names_from = 'indicator', values_from = 'value')
   
   write.csv(table1, file = save_csv_path)
   
-  message("Table extracted from T5")  
+  message("Table extracted from T8")
+
+  return(table1)
+    
 }
 
 
 # ====================================================================================
-# USAGE: extract_t5() function example
+# USAGE: extract_t8() function example
 # ====================================================================================
 
 ### NOTES FOR KATE ###
@@ -69,10 +70,10 @@ extract_t5 <- function(excel_file_path, save_csv_path){
 # Then just run the R script
 
 
-extract_t5(excel_file_path = "../data-raw/LVA_Appendix_tables_Aug_2020.xlsx",
-           save_csv_path = "../data-raw/extracted_csvs/T5/T5_Figure_4_Final.csv")
+# extract_t8(excel_file_path = "../data-raw/BUL_Appendix_tables.xlsx",
+#            save_csv_path = "../data-raw/extracted_csvs/T8/T8_Figure_20_Final.csv")
 
-# read_csv('../data-raw/extracted_csvs/T5/T5_Figure_4_Final.csv')
 
 # ====================================================================================
 
+# read_csv('../data-raw/extracted_csvs/T8/T8_Figure_20_Final.csv')
